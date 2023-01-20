@@ -17,18 +17,14 @@ export const Curzor: Component = () => {
 	)
 	const [offsetX, setOffsetX] = createSignal(0)
 	const [offsetY, setOffsetY] = createSignal(0)
-	const [px, setPx] = createSignal(0)
-	const [py, setPy] = createSignal(0)
+	const [mouseX, setMouseX] = createSignal(0)
+	const [mouseY, setMouseY] = createSignal(0)
 	const [pressing, setPressing] = createSignal(false)
 
 	if (globalThis.document) {
 		document.addEventListener("mousemove", (e) => {
-			if (hoveringEl()) {
-				// setOffsetY((o) => o + (e.clientY - py()) / OFFSET)
-				// setOffsetX((o) => o + (e.clientX - px()) / OFFSET)
-			}
-			setPx(e.clientX)
-			setPy(e.clientY)
+			setMouseX(e.clientX)
+			setMouseY(e.clientY)
 		})
 
 		document.addEventListener("mousedown", () => {
@@ -64,8 +60,8 @@ export const Curzor: Component = () => {
 		if (!hel) return null
 		return hel?.offsetTop + hel.offsetHeight / 2
 	})
-	const yString = createMemo(() => `${hoveringElY() ?? py()}px`)
-	const xString = createMemo(() => `${hoveringElX() ?? px()}px`)
+	const yString = createMemo(() => `${hoveringElY() ?? mouseY()}px`)
+	const xString = createMemo(() => `${hoveringElX() ?? mouseX()}px`)
 	const isHovering = createMemo(() => !!hoveringEl())
 	const width = createMemo(() =>
 		hoveringEl()?.dataset.shadow === "false"
@@ -89,24 +85,22 @@ export const Curzor: Component = () => {
 		() => `translate(${offsetX() * 1.3}px, ${offsetY() * 1.3}px)`
 	)
 	createEffect(() => {
-		const hel = hoveringEl()
-		const x = px()
-		const y = py()
-		if (hel) {
+		const hoveringElement = hoveringEl()
+		const x = mouseX()
+		const y = mouseY()
+		if (hoveringElement) {
 			setOffsetX(
-				() => (x - hel.offsetLeft - hel.offsetWidth / 2) / OFFSET
+				() => (x - hoveringElement.offsetLeft - hoveringElement.offsetWidth / 2) / OFFSET
 			)
 			setOffsetY(
-				() => (y - hel.offsetTop - hel.offsetHeight / 2) / OFFSET
+				() => (y - hoveringElement.offsetTop - hoveringElement.offsetHeight / 2) / OFFSET
 			)
 		}
 	})
 	createEffect(() => {
-		const hel = hoveringEl()
-		console.log(offsetY())
-		console.log(offsetX())
-		if (hel) {
-			hel.style.transform = `translate(${offsetX()}px, ${offsetY()}px)`
+		const hoveringElement = hoveringEl()
+		if (hoveringElement) {
+			hoveringElement.style.transform = `translate(${offsetX()}px, ${offsetY()}px)`
 		}
 	})
 
