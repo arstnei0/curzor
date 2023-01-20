@@ -1,0 +1,17 @@
+---
+import Layout from "../layouts/Layout.astro"
+import { Curzor } from "../components/Curzor"
+import { Test } from "../components/Test"
+---
+
+<Layout title="Welcome to Astro.">
+	<Curzor client:load />
+	<Test client:load />
+</Layout>
+
+<style is:global>
+	a {
+		text-decoration: none;
+		font-size: 2em;
+	}
+</style>
