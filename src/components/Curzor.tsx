@@ -67,21 +67,23 @@ export const Curzor: Component = () => {
 	const yString = createMemo(() => `${hoveringElY() ?? py()}px`)
 	const xString = createMemo(() => `${hoveringElX() ?? px()}px`)
 	const isHovering = createMemo(() => !!hoveringEl())
-	const width = createMemo(
-		() =>
-			`${
-				hoveringEl()?.clientWidth
-					? (hoveringEl()?.clientWidth as any) * 1.3
-					: 20
-			}px`
+	const width = createMemo(() =>
+		hoveringEl()?.dataset.shadow === "false"
+			? `0px`
+			: `${
+					hoveringEl()?.clientWidth
+						? (hoveringEl()?.clientWidth as any) * 1.3
+						: 20
+			  }px`
 	)
-	const height = createMemo(
-		() =>
-			`${
-				hoveringEl()?.clientHeight
-					? (hoveringEl()?.clientHeight as any) * 1.3
-					: 20
-			}px`
+	const height = createMemo(() =>
+		hoveringEl()?.dataset.shadow === "false"
+			? `0px`
+			: `${
+					hoveringEl()?.clientHeight
+						? (hoveringEl()?.clientHeight as any) * 1.3
+						: 20
+			  }px`
 	)
 	const transformStyle = createMemo(
 		() => `translate(${offsetX() * 1.3}px, ${offsetY() * 1.3}px)`
@@ -135,7 +137,10 @@ export const Curzor: Component = () => {
 	)
 }
 
-export const Hoverable: Component<{ children: JSX.Element }> = (props) => {
+export const Hoverable: Component<{
+	children: JSX.Element
+	shadow?: boolean
+}> = (props) => {
 	let el: HTMLDivElement | null = null
 
 	onMount(() => {
@@ -152,7 +157,11 @@ export const Hoverable: Component<{ children: JSX.Element }> = (props) => {
 	})
 
 	return (
-		<div class="hoverable" ref={el as unknown as HTMLDivElement}>
+		<div
+			class="hoverable"
+			ref={el as unknown as HTMLDivElement}
+			data-shadow={`${props.shadow === undefined ? true : false}`}
+		>
 			{props.children}
 		</div>
 	)
